@@ -1,0 +1,4 @@
+pydantic>=2
+torch>=2.11.0,<3.0.0
+torchvision
+vllm>=0.20.0,<1.0.0

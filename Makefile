@@ -1,3 +1,5 @@
+.PHONY: format install export-deps mkdocs pytest
+
 # Development
 format:
 	@isort vllm_on_dgxspark tests
@@ -5,6 +7,9 @@ format:
 
 install:
 	pip install -e ".[dev]"
+
+export-deps:
+	python -c 'import tomllib; data = tomllib.load(open("pyproject.toml", "rb")); print("\n".join(data["project"]["dependencies"]))' > requirements.txt
 
 # Docs
 mkdocs:

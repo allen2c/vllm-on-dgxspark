@@ -1,6 +1,11 @@
 [project]
 authors = [{ name = "Allen Chou", email = "f1470891079@gmail.com" }]
-dependencies = ["pydantic>=2"]
+dependencies = [
+  "pydantic>=2",
+  "torch>=2.11.0,<3.0.0",
+  "torchvision",
+  "vllm>=0.20.0,<1.0.0",
+]
 description = "Validate local os installation of vllm on dgxspark"
 license = { text = "MIT" }
 name = "vllm-on-dgxspark"

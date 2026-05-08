@@ -5,6 +5,7 @@
 .envrc
 data
 poetry.lock
+test_*.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

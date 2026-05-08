@@ -12,6 +12,9 @@ PYTHON ?= python
 AUDIO_FILE := /tmp/vllm-media/cough-16k-mono.wav
 VIDEO_URL := https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/draw.mp4
 
+SYS_TOTAL_GIB := $(shell python -c "import os; mem=os.sysconf('SC_PAGE_SIZE')*os.sysconf('SC_PHYS_PAGES'); print(f'{mem/1024**3:.1f}')")
+VOYAGE_GPU_MEM_UTIL  := $(shell python -c "total=$(SYS_TOTAL_GIB); target=20.0; ratio=target/total; print(f'{min(ratio, 0.90):.2f}')")
+
 .PHONY: format install export-deps mkdocs pytest vllm-serve vllm-serve-voyage-4-nano query-vllm-image query-vllm-audio query-vllm-video download-audio
 
 # Development
@@ -36,6 +39,7 @@ vllm-serve:
 		--trust-remote-code
 
 vllm-serve-voyage-4-nano:
+	@echo "System RAM: $(SYS_TOTAL_GIB) GiB, targeting 20 GiB → utilization: $(VOYAGE_GPU_MEM_UTIL)"
 	vllm serve $(VOYAGE_MODEL) \
 		--served-model-name $(VOYAGE_SERVED_MODEL_NAME) \
 		--host $(HOST) \
@@ -47,7 +51,7 @@ vllm-serve-voyage-4-nano:
 		--max-model-len 32768 \
 		--max-num-seqs 512 \
 		--enforce-eager \
-		--gpu-memory-utilization 0.85 \
+		--gpu-memory-utilization $(VOYAGE_GPU_MEM_UTIL) \
 		--hf-overrides '{"architectures": ["VoyageQwen3BidirectionalEmbedModel"]}'
 
 # Query VLLM

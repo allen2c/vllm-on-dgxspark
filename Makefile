@@ -47,6 +47,7 @@ vllm-serve-voyage-4-nano:
 		--max-model-len 32768 \
 		--max-num-seqs 512 \
 		--enforce-eager \
+		--gpu-memory-utilization 0.85 \
 		--hf-overrides '{"architectures": ["VoyageQwen3BidirectionalEmbedModel"]}'
 
 # Query VLLM

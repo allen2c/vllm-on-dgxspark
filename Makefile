@@ -2,6 +2,9 @@ SHELL := /bin/bash
 .ONESHELL:
 
 MODEL := Qwen/Qwen2.5-Omni-3B
+VOYAGE_MODEL := voyageai/voyage-4-nano
+VOYAGE_SERVED_MODEL_NAME := voyage-4-nano
+VOYAGE_PORT := 8944
 HOST := 0.0.0.0
 PORT := 8000
 URL := http://localhost:$(PORT)/v1/chat/completions
@@ -9,7 +12,7 @@ PYTHON ?= python
 AUDIO_FILE := /tmp/vllm-media/cough-16k-mono.wav
 VIDEO_URL := https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/draw.mp4
 
-.PHONY: format install export-deps mkdocs pytest vllm-serve query-vllm-image query-vllm-audio query-vllm-video download-audio
+.PHONY: format install export-deps mkdocs pytest vllm-serve vllm-serve-voyage-4-nano query-vllm-image query-vllm-audio query-vllm-video download-audio
 
 # Development
 format:
@@ -31,6 +34,21 @@ vllm-serve:
 		--max-model-len 32768 \
 		--max-num-seqs 1 \
 		--trust-remote-code
+
+vllm-serve-voyage-4-nano:
+	vllm serve $(VOYAGE_MODEL) \
+		--served-model-name $(VOYAGE_SERVED_MODEL_NAME) \
+		--host $(HOST) \
+		--port $(VOYAGE_PORT) \
+		--runner pooling \
+		--convert embed \
+		--trust-remote-code \
+		--dtype bfloat16 \
+		--max-model-len 32768 \
+		--max-num-seqs 512 \
+		--enforce-eager \
+		--disable-log-requests \
+		--hf-overrides '{"architectures": ["VoyageQwen3BidirectionalEmbedModel"]}'
 
 # Query VLLM
 ## Test image input

@@ -1,5 +1,7 @@
+av
 psutil
 pydantic>=2
+soundfile
 torch>=2.11.0,<3.0.0
 torchvision
 vllm>=0.20.0,<1.0.0

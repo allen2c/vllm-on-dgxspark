@@ -5,6 +5,7 @@ MODEL := Qwen/Qwen2.5-Omni-3B
 VOYAGE_MODEL := voyageai/voyage-4-nano
 VOYAGE_SERVED_MODEL_NAME := voyage-4-nano
 VOYAGE_PORT := 8944
+VOYAGE_URL := http://localhost:$(VOYAGE_PORT)/v1/embeddings
 HOST := 0.0.0.0
 PORT := 8000
 URL := http://localhost:$(PORT)/v1/chat/completions
@@ -49,12 +50,22 @@ vllm-serve-voyage-4-nano:
 		--trust-remote-code \
 		--dtype bfloat16 \
 		--max-model-len 32768 \
-		--max-num-seqs 512 \
+		--max-num-seqs 256 \
 		--enforce-eager \
 		--gpu-memory-utilization $(VOYAGE_GPU_MEM_UTIL) \
 		--hf-overrides '{"architectures": ["VoyageQwen3BidirectionalEmbedModel"]}'
 
 # Query VLLM
+## Test voyage-4-nano embeddings
+query-vllm-voyage-4-nano-embeddings:
+	curl $(VOYAGE_URL) \
+		-H "Content-Type: application/json" \
+		-d '{
+			"model": "$(VOYAGE_SERVED_MODEL_NAME)",
+			"messages": [{"role": "user", "content": "Hello, world!"}],
+			"max_tokens": 128
+		}'
+
 ## Test image input
 query-vllm-image:
 	curl $(URL) \

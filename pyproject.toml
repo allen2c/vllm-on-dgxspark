@@ -2,8 +2,10 @@
 authors = [{ name = "Allen Chou", email = "f1470891079@gmail.com" }]
 dependencies = [
   "av",
+  "openai-rq",
   "psutil",
   "pydantic>=2",
+  "redis",
   "rich",
   "rich-color-support",
   "soundfile",

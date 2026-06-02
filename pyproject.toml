@@ -2,7 +2,7 @@
 authors = [{ name = "Allen Chou", email = "f1470891079@gmail.com" }]
 dependencies = [
   "av",
-  "openai-rq",
+  "openai-rq>=0.1.2",
   "psutil",
   "pydantic>=2",
   "redis",
